@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: demoinyeccion
+  config:
+    import: optional:classpath:feature-flags.yaml
+logging:
+  level:
+    root: INFO
+server:
+  port: 8080
+app:
+  welcome-message: "Bienvenido"

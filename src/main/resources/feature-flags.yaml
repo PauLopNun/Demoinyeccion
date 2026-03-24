@@ -1,0 +1,2 @@
+feature-flags:
+  flag-reinicio-cinco-minutos: false

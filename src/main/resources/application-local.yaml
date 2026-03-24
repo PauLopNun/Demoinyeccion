@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: demoinyeccion
+logging:
+  level:
+    root: INFO
+server:
+  port: 9090
+app:
+  welcome-message: "Bienvenido a LOCAL"

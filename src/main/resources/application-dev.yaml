@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: demoinyeccion
+logging:
+  level:
+    root: DEBUG
+server:
+  port: 8081
+app:
+  welcome-message: "Bienvenido a DEV"
