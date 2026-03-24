@@ -1,10 +1,35 @@
 package com.exampleinyection.demoinyeccion;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mockStatic;
 
 class DemoinyeccionApplicationUnitTests {
+
+    @Test
+    void mainShouldDelegateToSpringApplicationRun() {
+        try (MockedStatic<SpringApplication> springApplication = mockStatic(SpringApplication.class)) {
+            DemoinyeccionApplication.main(new String[]{});
+            springApplication.verify(() -> SpringApplication.run(eq(DemoinyeccionApplication.class), eq(new String[]{})));
+        }
+    }
+
+    @Test
+    void commandLineRunnerShouldExecuteWithoutErrors() throws Exception {
+        ConfiguracionExterna config = new ConfigExternaEnUnleashDev();
+        AppConfig appConfig = new AppConfig();
+        appConfig.setWelcomeMessage("Hola");
+
+        DemoinyeccionApplication app = new DemoinyeccionApplication(config, appConfig);
+        CommandLineRunner runner = app.run();
+
+        assertDoesNotThrow(() -> runner.run(new String[]{}));
+    }
 
     @Test
     void devProfileShouldReturnDevMessage() {
