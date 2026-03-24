@@ -2,6 +2,11 @@
 
 Proyecto Spring Boot con inyeccion por perfiles (`local` y `dev`) y endpoints de prueba para validar configuracion.
 
+![Java](https://img.shields.io/badge/Java-17-orange?style=flat-square&logo=java)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2-brightgreen?style=flat-square&logo=spring)
+![JUnit 5](https://img.shields.io/badge/Testing-JUnit5-red?style=flat-square&logo=junit5)
+![Lombok](https://img.shields.io/badge/Lombok-v1.18-blue?style=flat-square)
+
 ## Requisitos
 
 - Java 17
