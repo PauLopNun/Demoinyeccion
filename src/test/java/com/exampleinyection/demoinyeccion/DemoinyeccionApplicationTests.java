@@ -2,12 +2,19 @@ package com.exampleinyection.demoinyeccion;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
+@AutoConfigureMockMvc
 @ActiveProfiles("dev")
 class DemoinyeccionApplicationTests {
 
@@ -16,6 +23,9 @@ class DemoinyeccionApplicationTests {
 
     @Autowired
     private AppConfig appConfig;
+
+    @Autowired
+    private MockMvc mockMvc;
 
     @Test
     void contextLoads() {
@@ -39,5 +49,21 @@ class DemoinyeccionApplicationTests {
     @Test
     void shouldNotRestartAppInDevProfile() {
         assertFalse(configuracionExterna.miAppTieneQueReiniciarCadaCincoMinutos());
+    }
+
+    @Test
+    void healthDemoShouldReturnOk() throws Exception {
+        mockMvc.perform(get("/health-demo"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("ok"));
+    }
+
+    @Test
+    void mensajeShouldReturnExpectedPayloadInDevProfile() throws Exception {
+        mockMvc.perform(get("/mensaje"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.mensajeServicio").value("Mensaje desde el perfil DEV"))
+                .andExpect(jsonPath("$.mensajeConfiguracion").value("Bienvenido a DEV"))
+                .andExpect(jsonPath("$.reiniciarCadaCincoMinutos").value(false));
     }
 }

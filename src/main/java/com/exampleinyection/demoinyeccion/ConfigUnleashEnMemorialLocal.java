@@ -1,15 +1,17 @@
 package com.exampleinyection.demoinyeccion;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-@RequiredArgsConstructor
 @Service
 @Profile("local")
 public class ConfigUnleashEnMemorialLocal implements ConfiguracionExterna {
 
     private final FlagProperties flagProperties;
+
+    public ConfigUnleashEnMemorialLocal(FlagProperties flagProperties) {
+        this.flagProperties = flagProperties;
+    }
 
     @Override
     public String getLastRecordInsertedInDatabase() {

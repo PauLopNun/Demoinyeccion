@@ -1,6 +1,8 @@
 spring:
   application:
     name: demoinyeccion
+  profiles:
+    default: local
   config:
     import: optional:classpath:feature-flags.yaml
 logging:

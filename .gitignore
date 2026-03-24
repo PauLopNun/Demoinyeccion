@@ -1,0 +1,12 @@
+# Build output
+/target/
+
+# IntelliJ
+/.idea/
+*.iml
+
+# Local Maven wrapper (keep local, do not push)
+/mvnw
+/mvnw.cmd
+/.mvn/
+

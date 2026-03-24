@@ -1,37 +1,85 @@
-# Demo Inyección de Dependencias y Feature Flags
+# Demo Inyeccion de Dependencias y Feature Flags
 
-Este proyecto implementa un sistema dinámico de configuración y gestión de funcionalidades (Feature Flags) utilizando Spring Boot. La arquitectura permite alternar entre implementaciones reales (Unleash) y simulaciones locales mediante perfiles de Spring, garantizando un desacoplamiento total de la lógica de negocio.
-
-![Java](https://img.shields.io/badge/Java-17-orange?style=flat-square&logo=java)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2-brightgreen?style=flat-square&logo=spring)
-![JUnit 5](https://img.shields.io/badge/Testing-JUnit5-red?style=flat-square&logo=junit5)
-![Lombok](https://img.shields.io/badge/Lombok-v1.18-blue?style=flat-square)
-
-## Arquitectura y Diseño
-
-El sistema se basa en el principio de inversión de dependencia para gestionar la configuración externa:
-
-- **ConfiguracionExterna**: Interfaz que define el contrato para la obtención de mensajes de bienvenida y estados de flags.
-- **ConfigExternaEnUnleashDev**: Implementación activa para el perfil `dev` que conecta con el servicio Unleash.
-- **ConfigUnleashEnMemorialLocal**: Implementación para el perfil `local` que utiliza archivos YAML locales para simular el comportamiento de flags sin dependencias externas.
-- **FlagProperties**: Mapeo de propiedades jerárquicas mediante `@ConfigurationProperties` para la gestión de flags en local.
+Proyecto Spring Boot con inyeccion por perfiles (`local` y `dev`) y endpoints de prueba para validar configuracion.
 
 ## Requisitos
 
-- Java 17 o superior.
-- Maven 3.6+.
+- Java 17
+- IntelliJ IDEA con soporte Maven
 
-## Configuración de Perfiles
+Nota: en este equipo no hace falta tener `mvn` instalado globalmente. Puedes ejecutar desde IntelliJ.
 
-El proyecto utiliza archivos de propiedades específicos por entorno:
+## Perfiles
 
-- `application-local.yaml`: Configuración para desarrollo offline.
-- `application-dev.yaml`: Configuración para integración con servicios externos.
-- `feature-flags.yaml`: Definición de estados para las funcionalidades en entorno local.
+- `local`: perfil por defecto (`spring.profiles.default=local`)
+- `dev`: perfil alternativo
 
-## Ejecución
+Archivos de configuracion:
 
-Para iniciar la aplicación con el perfil local:
+- `src/main/resources/application.yaml`
+- `src/main/resources/application-local.yaml`
+- `src/main/resources/application-dev.yaml`
+- `src/main/resources/feature-flags.yaml`
 
-```bash
-mvn spring-boot:run -Dspring-boot.run.profiles=local
+## Ejecutar desde IntelliJ
+
+1. Abre el proyecto por `pom.xml`.
+2. Verifica `Project SDK = 17`.
+3. Ejecuta `DemoinyeccionApplication`.
+
+Para forzar perfil en Run Configuration (VM options):
+
+```text
+-Dspring.profiles.active=local
+```
+
+o
+
+```text
+-Dspring.profiles.active=dev
+```
+
+## Comandos utiles en PowerShell
+
+Comprobar Java:
+
+```powershell
+java -version
+```
+
+Probar endpoints cuando la app este levantada:
+
+```powershell
+curl.exe http://localhost:9090/health-demo
+curl.exe http://localhost:9090/mensaje
+```
+
+## Endpoints
+
+- `GET /health-demo` -> `ok`
+- `GET /mensaje` -> JSON con:
+  - `mensajeServicio`
+  - `mensajeConfiguracion`
+  - `reiniciarCadaCincoMinutos`
+
+## Maven Wrapper (opcional y local)
+
+Si quieres usar wrapper sin instalar Maven global, puedes generarlo desde IntelliJ (Maven Tool Window -> Execute Maven Goal) con:
+
+```text
+org.apache.maven.plugins:maven-wrapper-plugin:3.3.2:wrapper
+```
+
+Este repo esta configurado para no subir el wrapper al remoto:
+
+- `mvnw`
+- `mvnw.cmd`
+- `.mvn/`
+
+Si algun archivo del wrapper ya estuviera trackeado, quitarlo del index:
+
+```powershell
+git rm --cached mvnw
+git rm --cached mvnw.cmd
+git rm --cached -r .mvn
+```
