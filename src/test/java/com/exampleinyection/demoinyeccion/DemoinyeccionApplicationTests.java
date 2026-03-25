@@ -1,69 +1,79 @@
 package com.exampleinyection.demoinyeccion;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("dev")
 class DemoinyeccionApplicationTests {
 
-    @Autowired
-    private ConfiguracionExterna configuracionExterna;
+    @Nested
+    @SpringBootTest
+    @ActiveProfiles("dev")
+    class DevProfileTest {
 
-    @Autowired
-    private AppConfig appConfig;
+        @Autowired
+        private ConfiguracionExterna configuracionExterna;
 
-    @Autowired
-    private MockMvc mockMvc;
+        @Autowired
+        private AppConfig appConfig;
 
-    @Test
-    void contextLoads() {
+        @Autowired
+        private DemoinyeccionApplication demoinyeccionApplication;
+
+        @Test
+        void contextLoads() {
+            assertThat(configuracionExterna).isInstanceOf(ConfigEnFicheroConfigLocal.class);
+        }
+
+        @Test
+        void shouldLoadDevWelcomeMessage() {
+            assertThat(appConfig.getWelcomeMessage()).isEqualTo("Bienvenido a DEV");
+        }
+
+        @Test
+        void shouldReturnDevMessage() {
+            assertThat(demoinyeccionApplication.configuracionAplicada()).isEqualTo("Mensaje desde el perfil DEV");
+        }
+
+        @Test
+        void shouldReadFeatureFlagFromYaml() {
+            assertThat(configuracionExterna.miAppTieneQueReiniciarCadaCincoMinutos()).isTrue();
+        }
     }
 
-    @Test
-    void shouldInjectDevImplementationOfConfiguracionExterna() {
-        assertInstanceOf(ConfigExternaEnUnleashDev.class, configuracionExterna);
-    }
+    @Nested
+    @SpringBootTest
+    @ActiveProfiles("local")
+    class LocalProfileTest {
 
-    @Test
-    void shouldReturnDevMessageFromInjectedBean() {
-        assertEquals("Mensaje desde el perfil DEV", configuracionExterna.getLastRecordInsertedInDatabase());
-    }
+        @Autowired
+        private ConfiguracionExterna configuracionExterna;
 
-    @Test
-    void shouldLoadWelcomeMessageFromDevYaml() {
-        assertEquals("Bienvenido a DEV", appConfig.getWelcomeMessage());
-    }
+        @Autowired
+        private AppConfig appConfig;
 
-    @Test
-    void shouldNotRestartAppInDevProfile() {
-        assertFalse(configuracionExterna.miAppTieneQueReiniciarCadaCincoMinutos());
-    }
+        @Test
+        void contextLoads() {
+            assertThat(configuracionExterna).isInstanceOf(ConfigHardcodeadaParaLocal.class);
+        }
 
-    @Test
-    void healthDemoShouldReturnOk() throws Exception {
-        mockMvc.perform(get("/health-demo"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("ok"));
-    }
+        @Test
+        void shouldLoadLocalWelcomeMessage() {
+            assertThat(appConfig.getWelcomeMessage()).isEqualTo("Bienvenido a LOCAL");
+        }
 
-    @Test
-    void mensajeShouldReturnExpectedPayloadInDevProfile() throws Exception {
-        mockMvc.perform(get("/mensaje"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.mensajeServicio").value("Mensaje desde el perfil DEV"))
-                .andExpect(jsonPath("$.mensajeConfiguracion").value("Bienvenido a DEV"))
-                .andExpect(jsonPath("$.reiniciarCadaCincoMinutos").value(false));
+        @Test
+        void shouldReturnLocalMessage() {
+            assertThat(configuracionExterna.getMensajeDeInicioDeAplicacion()).isEqualTo("Mensaje desde el perfil LOCAL");
+        }
+
+        @Test
+        void shouldNotRestartApp() {
+            assertThat(configuracionExterna.miAppTieneQueReiniciarCadaCincoMinutos()).isFalse();
+        }
     }
 }

@@ -1,2 +1,2 @@
 feature-flags:
-  flag-reinicio-cinco-minutos: false
+  reiniciar-cada-cinco-minutos: true

@@ -6,12 +6,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Primary
-@Profile("dev")
-public class ConfigExternaEnUnleashDev implements ConfiguracionExterna {
+@Profile("local")
+public class ConfigHardcodeadaParaLocal implements ConfiguracionExterna {
 
     @Override
-    public String getLastRecordInsertedInDatabase() {
-        return "Mensaje desde el perfil DEV";
+    public String getMensajeDeInicioDeAplicacion() {
+        return "Mensaje desde el perfil LOCAL";
     }
 
     @Override

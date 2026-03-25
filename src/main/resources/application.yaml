@@ -1,14 +1,10 @@
 spring:
   application:
     name: demoinyeccion
-  profiles:
-    default: local
   config:
     import: optional:classpath:feature-flags.yaml
 logging:
   level:
-    root: INFO
-server:
-  port: 8080
+    root: WARN
 app:
-  welcome-message: "Bienvenido"
+  welcome-message: "Hola qué hay"
