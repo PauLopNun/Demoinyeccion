@@ -11,10 +11,10 @@ Este proyecto implementa un sistema dinámico de configuración y gestión de fu
 
 ### 1. Gestión de Configuraciones (Feature Flags)
 El sistema se basa en el principio de inversión de dependencia para gestionar la configuración externa:
-* **ConfiguracionExterna**: Interfaz que define el contrato para la obtención de mensajes de bienvenida y estados de flags.
-* **ConfigExternaEnUnleashDev**: Implementación activa para el perfil `dev` que conecta con el servicio Unleash.
-* **ConfigUnleashEnMemorialLocal**: Implementación para el perfil `local` que utiliza archivos YAML locales para simular el comportamiento de flags sin dependencias externas.
-* **FlagProperties**: Mapeo de propiedades jerárquicas mediante `@ConfigurationProperties` para la gestión de flags en local.
+* **ConfiguracionExterna**: Interfaz que define el contrato para la obtención de mensajes de inicio y estados de flags.
+* **ConfigEnFicheroConfigLocal**: Implementación activa para el perfil `dev`.
+* **ConfigHardcodeadaParaLocal**: Implementación para el perfil `local` con valores en duro (hardcodeados).
+* **ClaseQueLeeConfigDeFicheroYamlLocal**: Implementación del ejercicio propuesto mediante `@ConfigurationProperties` para leer dinámicamente el estado del flag desde `feature-flags.yaml`.
 
 ### 2. API REST de Usuarios (En memoria)
 El proyecto expone endpoints para gestionar entidades de tipo `User` (nombre, edad, alergias). La persistencia se simula en memoria a través del `UserService`.
